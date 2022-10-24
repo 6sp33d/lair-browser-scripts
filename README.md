@@ -21,6 +21,9 @@ Add the following as a bookmarklet by creating a new bookmark in your browser (I
 
 This will load all the scripts behind the scenes without having to remember the code snippet to do so.
 
+
 A couple notes regarding loading these scripts from URLs:
+
 I specifically use the jsdelivr CDN because Firefox has content-type mismatches when using rawgit.com 
+
 If you try to juse use the $.getScript() segment and put it into your developer console, you may have bad luck making it work. I never could, but somehow the bookmark always worked just fine. No idea what's up with that.
