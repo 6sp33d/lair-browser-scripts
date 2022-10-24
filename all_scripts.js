@@ -2853,3 +2853,161 @@ function uniqueServicesByHostsCIDR () {
     return a - b
   }).join(',')
 }
+
+function replaceNessusWithOptiv () {
+  // Replaces "Nessus" with "Optiv" in all evidence fields
+  //
+  // Usage: replaceNessusWithOptiv()
+  //
+  // Created by: Chris Mazzei
+  // Requires client-side updates: false
+
+  const searchRegExp = 'Nessus';
+  const replaceWith = 'Optiv';
+
+  var projectId = Session.get('projectId')
+  var issues = Issues.find({
+    projectId, projectId
+  }).fetch()
+
+  issues.forEach(function (issue) {
+    console.log("Updating evidence verbiage: Nessus -> Optiv")
+    console.log(issue.title)
+    console.log(issue.evidence.replace(searchRegExp, replaceWith))
+    Meteor.call('setIssueEvidence', projectId, issue._id, issue.evidence.replace(searchRegExp, replaceWith))
+  })
+}
+
+function dangerousServices() {
+  var projectId = Session.get('projectId')
+  var ports = Services.find({
+    'projectId': projectId
+  })
+
+  var serverMap = {
+    0: 'NULL',
+    21: 'FTP',
+    25: 'SMTP',
+    53: 'DNS',
+    80: 'HTTP',
+    81: 'HTTP',
+    443: 'HTTPS',
+    500: 'ISAKMP',
+  }
+
+  var protoMap = {
+    'www': 'HTTP',
+    'http': 'HTTP',
+    'https': 'HTTPS',
+    'ssl': 'HTTPS',
+    'isakmp': 'ISAKMP',
+    'ftp': 'FTP',
+    'domain': 'DNS',
+    'dns': 'DNS'
+  }
+
+  ports.forEach(function (port) {
+    if (! serverMap[port.port] && ! protoMap[port.service]) {
+      var host = Hosts.findOne({
+        'projectId': projectId,
+        '_id': port.hostId
+      })
+      console.log(host.ipv4 + "," + port.port + "," + port.protocol)
+    }
+  })
+}
+
+function normalizeServices() {
+  var projectId = Session.get('projectId')
+  var ports = Services.find({
+    'projectId': projectId
+  })
+
+  var serverMap = {
+    22: 'SSH',
+    21: 'FTP',
+    23: 'TELNET',
+    25: 'SMTP',
+    53: 'DNS',
+    79: 'FINGER',
+    80: 'HTTP',
+    81: 'HTTP',
+    111: 'RPC',
+    123: 'NTP',
+    135: 'MS-RPC',
+    137: 'NETBIOS',
+    139: 'CIFS',
+    161: 'SNMP',
+    443: 'HTTPS',
+    445: 'CIFS',
+    500: 'ISAKMP',
+    1433: 'MS-SQL-TDS',
+    1434: 'MS-SQL-MONITOR',
+    2222: 'SSH',
+    2638: 'SYBASE',
+    3389: 'MS RDP',
+    4786: 'SMARTINSTALL',
+    5060: 'SIP',
+    5222: 'XMPPCLIENT',
+    7777: 'HTTP',
+    8000: 'HTTP',
+    8080: 'HTTP',
+    8081: 'HTTP',
+    8443: 'HTTPS',
+    9090: 'HTTP',
+    49316: 'MS-SQL-TDS'
+  }
+
+  ports.forEach(function (port) {
+    var service = port.service.toUpperCase()
+    var mappedService = serverMap[port.port]
+    if (mappedService) {
+      service = mappedService
+    }
+
+    if (service === '') {
+      service = 'UNKNOWN'
+    }
+
+    service = service.replace('WWW', 'HTTP')
+    service = service.replace('HTTP-ALT', 'HTTP')
+    service = service.replace('HTTPS-ALT', 'HTTPS')
+    service = service.replace(/\?/g, '')
+
+    if (service === port.service) {
+      return
+    }
+
+    Meteor.call('setServiceService', projectId, port._id, service, function (err) {
+      if (!err) {
+        console.log('Modified service')
+      } else {
+        console.log(err)
+      }
+    })
+  })
+}
+
+function generateMAClist() {
+  // Generate a list of IPs with associated MAC addresses.
+  //
+  // Created by: Taylor Reed
+  // Usage: generateMAClist()
+  // Requires client-side updates: false
+
+  var hosts = Hosts.find({
+    projectId: Session.get('projectId')
+  }).fetch()
+  var macstring = []
+  hosts.forEach(function (host) {
+    var ip = host.ipv4
+    var mac = host.mac
+    host.hostnames.forEach(function (name) {
+      var item = ip + ',' + mac
+      macstring.push(item)
+    })
+  })
+  macstring.forEach(function (item) {
+    console.log(item)
+  })
+}
