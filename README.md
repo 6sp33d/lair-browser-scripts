@@ -15,15 +15,12 @@ Collection of small JavaScript functions and scripts that can be used in Firefox
 ## Loading ALL Scripts
 
 You can now import all_scripts.js or all_scripts_min.js in the developer console for easier access to all the browser scripts at once. 
-paste the following into your developer console and you are ready to go:
-
-`$.getScript('https://cdn.jsdelivr.net/gh/6sp33d/lair-browser-scripts@master/all_scripts.js')`
-
-Then you can call any function included in this repo.
-Side note: this doesn't seem to actually work in firefox or chrome, so YMMV. I personally prefer the bookmark since it works in Firefox.
-
-Additionally, you can add the above as a bookmarklet by creating a new bookmark in your browser (I have it on my bookmark bar) with the location as:  
+Add the following as a bookmarklet by creating a new bookmark in your browser (I have it on my bookmark bar) with the location as:  
 
 `javascript:(function() { $.getScript('https://cdn.jsdelivr.net/gh/6sp33d/lair-browser-scripts@master/all_scripts.js'); })();`
 
 This will load all the scripts behind the scenes without having to remember the code snippet to do so.
+
+A couple notes regarding loading these scripts from URLs:
+I specifically use the jsdelivr CDN because Firefox has content-type mismatches when using rawgit.com 
+If you try to juse use the $.getScript() segment and put it into your developer console, you may have bad luck making it work. I never could, but somehow the bookmark always worked just fine. No idea what's up with that.
