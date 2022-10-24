@@ -22,7 +22,7 @@ Add the following as a bookmarklet by creating a new bookmark in your browser (I
 This will load all the scripts behind the scenes without having to remember the code snippet to do so.
 
 
-A couple notes regarding loading these scripts from URLs:
+### A couple notes regarding loading these scripts from URLs:
 
 I specifically use the jsdelivr CDN because Firefox has content-type mismatches when using rawgit.com 
 
