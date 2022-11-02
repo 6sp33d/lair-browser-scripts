@@ -1838,13 +1838,13 @@ function mergeDuplicateIssues(){
 
 /* eslint-disable no-unused-vars */
 /* globals Session Hosts Issues Meteor */
-function mergeIssues (titleRegex, minCVSS, maxCVSS, hostsRegex, newTitle, newCVSS, update) {
+function mergeIssues (titleRegex, minCVSS, maxCVSS, hostsRegex, newTitle, newCVSS, update, backup) {
   // Merges all issues identified by the regular expressions into a new or existing Issue
   // provided by newTitle.
   //
   // Usage:
-  // mergeIssues(/Apache/i, 7, 10, /.*/, 'Apache 2.x servers are vulnerable to multiple high risk issues', 'max', false)
-  // mergeIssues(/Apache/i, 7, 10, /.*/, 'Apache 2.x servers are vulnerable to multiple high risk issues', 'max', true)
+  // mergeIssues(/Apache/i, 7, 10, /.*/, 'Apache 2.x servers are vulnerable to multiple high risk issues', 'max', false, true)
+  // mergeIssues(/Apache/i, 7, 10, /.*/, 'Apache 2.x servers are vulnerable to multiple high risk issues', 'max', true, true)
   //
   // titleRegex - regex to search titles
   // minCVSS - minimum CVSS score to include
@@ -1853,11 +1853,15 @@ function mergeIssues (titleRegex, minCVSS, maxCVSS, hostsRegex, newTitle, newCVS
   // newTitle - title of the new Issue
   // newCVSS - new CVSS score, or choose 'max' to pick the highest CVSS score of that group
   // update - The update parameter determines whether it's a 'dry run' with output, or an actual merge. update = true will delete old entries
+  // backup - The backup parameter must be true to proceed; it's a handy reminder to backup your Lair
   //
   // Created by: Alex Lauerman and Tom Steele
   // Requires client-side updates: false
 
   // Do some light variable checking, you're still pretty much on your own
+  if (backup === false) {
+  	return console.log('Backup lair before you try this!')
+  }
   if (typeof titleRegex !== 'object') {
     return console.log('Issue regex can not be a string, must be a object')
   }
