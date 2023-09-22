@@ -1,4 +1,4 @@
-//I do not claim credit for this remarkable work; I just took someone script file, de-dup'd and tidied it, and then posted it in my repo so that I always have access to it.
+//I do not claim credit for this remarkable work; I just took someone's script file, de-dup'd and tidied it, and then posted it in my repo so that I always have access to it.
 
 /* eslint-disable no-unused-vars */
 /* globals Meteor Session Services */
